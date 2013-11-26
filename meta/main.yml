@@ -2,4 +2,4 @@
 
 dependencies:
   - { role: hostname }
-  - { role: build }
+  - { role: build-essential }
