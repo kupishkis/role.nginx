@@ -1,7 +1,7 @@
 # file: roles/nginx/tasks/package.yml
-
 - name: Nginx | Add the nginx repo to the apt sources
-  apt_repository: repo='ppa:nginx/stable'
+  apt_repository: repo='ppa:nginx/stable'	
+  when: ansible_distribution|Ubuntu
 
 - include: commons.yml
 
