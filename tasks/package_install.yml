@@ -1,10 +1,7 @@
 # file: roles/nginx/tasks/package.yml
 
 - name: Nginx | Add the nginx repo to the apt sources
-  apt_repository: repo='deb http://nginx.org/packages/ubuntu'
-
-- name: Nginx | Add the nginx apt key
-  apt_key: url=http://nginx.org/keys/nginx_signing.key
+  apt_repository: repo='ppa:nginx/stable'
 
 - include: commons.yml
 

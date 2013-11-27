@@ -1,12 +1,12 @@
 # file: roles/nginx/defaults/main.yml
 
-nginx_install_method: "source" # package also possible
+nginx_install_method: "package" # package also possible
 
 nginx_version: 1.5.3
 nginx_user: www-data
 nginx_group: www-data
-nginx_uid: 33
-nginx_gid: 33
+#nginx_uid: 33
+#nginx_gid: 33
 
 nginx_dir: /etc/nginx
 nginx_www_dir: /srv/www
@@ -90,3 +90,4 @@ nginx_status_authorized_ips:
 
 # nginx-upload_progress_module
 nginx_upload_progress_version: 0.9.0
+
