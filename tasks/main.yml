@@ -1,13 +1,20 @@
 # file: roles/nginx/tasks/main.yml
 
 - include: dependencies.yml
+  sudo: yes
 - include: user.yml
+  sudo: yes
 - include: source_install.yml
+  sudo: yes
   when: nginx_install_method == "source"
 - include: package_install.yml
+  sudo: yes
   when: nginx_install_method == "package"
 - include: configure.yml
+  sudo: yes
 - include: default.yml
+  sudo: yes
   when: nginx_setup_default == true
 - include: monit.yml
+  sudo: yes
   when: monit_protection == true
