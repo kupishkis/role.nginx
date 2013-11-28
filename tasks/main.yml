@@ -15,6 +15,9 @@
 - include: default.yml
   sudo: yes
   when: nginx_setup_default == true
+- include: undefault.yml
+  sudo: yes
+  when: nginx_setup_default == false
 #- include: monit.yml
 #  sudo: yes
 #  when: monit_protection == true
