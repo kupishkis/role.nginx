@@ -1,0 +1,10 @@
+---
+- name: deploy nginx sites
+  template: dest={{nginx_dir}}/sites-available/{{item.name}} src=nginx.site.j2 backup=yes owner=root group=root mode=0644
+  with_items: www_servers
+
+- name: enable nginx sites
+  file: path={{nginx_dir}}/sites-enabled/{{item.name}} src={{nginx_dir}}/sites-available/{{item.name}} state=link
+  with_items: www_servers
+  notify:
+    - restart nginx

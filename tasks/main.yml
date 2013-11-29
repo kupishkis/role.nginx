@@ -25,6 +25,10 @@
   sudo: yes
   when: nginx_setup_default == false
 
+- include: deploy.yml
+  sudo: yes
+  when: www_servers is defined
+
 #- include: monit.yml
 #  sudo: yes
 #  when: monit_protection == true
