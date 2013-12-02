@@ -5,7 +5,7 @@ server {
   {% if item.subpath is defined %}
   root   {{item.path}}/{{item.subpath}}/public;
   server_name  {{item.subpath}}.{{item.name}}.{{hostname}};
-  {% elsif item.dynpath is defined %}
+  {% elif item.dynpath is defined %}
   root   {{item.path}}/$dynhost/public;
   server_name  $dynhost.{{item.name}}.{{hostname}}
   {% else %}
