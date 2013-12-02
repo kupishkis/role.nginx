@@ -3,20 +3,19 @@
 server {
   listen   {{item.port}};
   {% if item.subpath is defined %}
+  root   {{item.path}}/{{item.subpath}}/public;
   server_name  {{item.subpath}}.{{item.name}}.{{hostname}};
+  {% elsif item.dynpath is defined %}
+  root   {{item.path}}/$dynhost/public;
+  server_name  $dynhost.{{item.name}}.{{hostname}}
   {% else %}
+  root   {{item.path}}/public
   server_name  {{item.name}}.{{hostname}}
   {% endif %}
 
   access_log  {{nginx_log_dir}}/access.log;
 
   index index.php;
-
-  {% if item.subpath is defined %}
-  root   {{item.path}}/{{item.subpath}}/public;
-  {% else %}
-  root   {{item.path}}/public
-  {% endif %}
 
   location / {
     try_files $uri /index.php?$args;
