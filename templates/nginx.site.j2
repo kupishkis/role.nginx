@@ -6,8 +6,8 @@ server {
   root   {{item.path}}/{{item.subpath}}/public;
   server_name  {{item.subpath}}.{{item.name}}.{{hostname}};
   {% elif item.dynpath is defined %}
-  root   {{item.path}}/$dynhost/public;
-  server_name  $dynhost.{{item.name}}.{{hostname}}
+  root   {{item.path}}/$http_host/public;
+  server_name  $http_host.{{item.name}}.{{hostname}}
   {% else %}
   root   {{item.path}}/public
   server_name  {{item.name}}.{{hostname}}
