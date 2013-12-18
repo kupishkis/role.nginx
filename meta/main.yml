@@ -1,5 +1,14 @@
 # file: roles/nginx/meta/main.yml
 
 dependencies:
-  - { role: hostname }
-  - { role: build-essential }
+  - role: packages
+    packages:
+      - git
+      - libgoogle-perftools-dev
+      - libpcre3
+      - libpcre3-dev
+      - openssl
+      - zlib1g-dev
+      - python-pycurl
+  - role: hostname
+  - role: build-essential

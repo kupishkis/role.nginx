@@ -1,16 +1,22 @@
 # {{ansible_managed}}
 
 server {
-  listen   {{item.port}};
-{% if item.subpath is defined %}
-  root   {{item.path}}/{{item.subpath}}/public;
-  server_name {{item.name}}.{{hostname}} {{item.subpath}}.{{item.name}}.{{hostname}};
-{% else %}
-  root   {{item.path}}/public
-  server_name  {{item.name}}.{{hostname}}
+  listen      {{item.port}};
+{% if item.ssl is defined and item.ssl.enabled %}
+  listen      {{item.ssl.port}};
 {% endif %}
 
-  access_log  {{nginx_log_dir}}/access.log;
+  server_name {{item.server_name}};
+  root        {{item.public_root}};
+
+  access_log  {{nginx_log_dir}}/{{item.name}}_access.log;
+  error_log   {{nginx_log_dir}}/{{item.name}}_error.log;
+
+{% if item.ssl is defined and item.ssl.enabled %}
+  ssl                 on;
+  ssl_certificate     {{nginx_dir}}/ssl/{{item.name}}.crt;
+  ssl_certificate_key {{nginx_dir}}/ssl/{{item.name}}.key;
+{% endif %}
 
   index index.php;
 

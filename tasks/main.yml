@@ -1,8 +1,4 @@
 # file: roles/nginx/tasks/main.yml
-
-- include: dependencies.yml
-  sudo: yes
-
 - include: user.yml
   sudo: yes
 
