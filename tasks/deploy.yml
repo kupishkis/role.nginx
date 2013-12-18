@@ -4,7 +4,7 @@
     openssl req -new -nodes -x509 -subj "/C={{item.ssl.country}}/ST={{item.ssl.state}}/L={{item.ssl.locality}}/O={{item.ssl.organization}}/OU={{item.ssl.unit}}/CN={{item.ssl.common_name}}" -days {{item.ssl.days}} -keyout {{nginx_dir}}/ssl/{{item.name}}.key -out {{nginx_dir}}/ssl/{{item.name}}.crt -extensions {{item.ssl.extension}}
     creates={{nginx_dir}}/ssl/{{item.name}}.crt
   notify: reload nginx
-  when: item.ssl.enabled
+  when: item.ssl is defined and item.ssl.enabled
   with_items: www_servers
 
 - name: deploy nginx sites
