@@ -35,5 +35,10 @@ server {
     fastcgi_pass unix:{{php_fpm_var_dir}}/fpm-{{item.name}}.sock;
     fastcgi_index index.php;
     include fastcgi_params;
+{% if item.fastcgi_params is defined %}
+{% for param in item.fastcgi_params %}
+    fastcgi_param   {{param}};
+{% endfor %}
+{% endif %}
   }
 }
