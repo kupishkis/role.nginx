@@ -15,6 +15,18 @@
     owner=root
     group=root
     mode=0644
+  when: not item.custom_template is defined
+  with_items: www_servers
+
+- name: deploy custom nginx sites
+  copy: >
+    dest={{nginx_dir}}/sites-available/{{item.name}}
+    content={{item.custom_template}}
+    backup=yes
+    owner=root
+    group=root
+    mode=0644
+  when: item.custom_template is defined
   with_items: www_servers
 
 - name: enable nginx sites
@@ -25,3 +37,4 @@
   with_items: www_servers
   notify:
     - restart nginx
+
