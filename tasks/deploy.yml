@@ -21,7 +21,7 @@
 - name: deploy custom nginx sites
   copy: >
     dest={{nginx_dir}}/sites-available/{{item.name}}
-    content={{item.custom_template}}
+    content="{{item.custom_template}}"
     backup=yes
     owner=root
     group=root
