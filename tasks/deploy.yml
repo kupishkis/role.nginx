@@ -1,11 +1,52 @@
 ---
-- name: create self-signed SSL cert
+- name: obtain root keys
+  get_url: >
+    dest={{nginx_dir}}/ssl
+    url="{{item.ssl.root}}/rootCA.pem"
+  when: item.ssl is defined and item.ssl.root is defined
+  with_items: www_servers
+  register: root_pem
+  tags: certgen
+
+- name: obtain root keys
+  get_url: >
+    dest={{nginx_dir}}/ssl
+    url="{{item.ssl.root}}/rootCA.key"
+  when: item.ssl is defined and item.ssl.root is defined
+  with_items: www_servers
+  register: root_key
+  tags: certgen
+
+- name: create SSL cert
   command: >
-    openssl req -new -nodes -x509 -subj "/C={{item.ssl.country}}/ST={{item.ssl.state}}/L={{item.ssl.locality}}/O={{item.ssl.organization}}/OU={{item.ssl.unit}}/CN={{item.ssl.common_name}}" -days {{item.ssl.days}} -keyout {{nginx_dir}}/ssl/{{item.name}}.key -out {{nginx_dir}}/ssl/{{item.name}}.crt -extensions {{item.ssl.extension}}
-    creates={{nginx_dir}}/ssl/{{item.name}}.crt
+    openssl req -new
+    -nodes
+    {% if not item.ssl.root is defined %} -x509 {% endif %}
+    -subj "/C={{item.ssl.country}}/ST={{item.ssl.state}}/L={{item.ssl.locality}}/O={{item.ssl.organization}}/OU={{item.ssl.unit}}/CN={{item.ssl.common_name}}"
+    -days {{item.ssl.days}}
+    -keyout {{nginx_dir}}/ssl/{{item.name}}.key
+    -out {{nginx_dir}}/ssl/{{item.name}}.{% if item.ssl.root is defined %}csr{% else %}crt{% endif %}
+    -extensions {{item.ssl.extension}}
+    {% if not root_pem.changed and not root_key.changed %} creates={{nginx_dir}}/ssl/{{item.name}}.{% if item.ssl.root is defined %}csr{% else %}crt{% endif %} {% endif %}
   notify: reload nginx
   when: item.ssl is defined and item.ssl.enabled
   with_items: www_servers
+  tags: certgen
+
+- name: sign SSL cert
+  command: >
+    openssl x509 -req
+    -in {{nginx_dir}}/ssl/{{item.name}}.csr
+    -CA {{nginx_dir}}/ssl/rootCA.pem
+    -CAkey {{nginx_dir}}/ssl/rootCA.key
+    -CAcreateserial
+    -out {{nginx_dir}}/ssl/{{item.name}}.crt
+    -days {{item.ssl.days}}
+    {% if not root_pem.changed and not root_key.changed %} creates={{nginx_dir}}/ssl/{{item.name}}.crt{% endif %}
+  notify: reload nginx
+  when: item.ssl is defined and item.ssl.enabled and item.ssl.root is defined
+  with_items: www_servers
+  tags: certgen
 
 - name: deploy nginx sites
   template: >
